@@ -21,28 +21,43 @@ repositories {
 }
 
 dependencies {
-	// Existing dependencies...
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-	implementation 'org.jetbrains.kotlin:kotlin-reflect'
-	implementation 'tools.jackson.module:jackson-module-kotlin'
-	runtimeOnly 'org.postgresql:postgresql'
+	// ---------------------------------------------------------
+	// 1. Core & Web
+	// ---------------------------------------------------------
+	implementation("org.springframework.boot:spring-boot-starter-web") // Includes Tomcat, MVC, Jackson
+	implementation("org.springframework.boot:spring-boot-starter-actuator") // Health checks & Metrics (Architecture+)
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-	// --- NEW: OpenAPI / Swagger UI ---
-	// Automatically generates documentation at /swagger-ui.html
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
+	// ---------------------------------------------------------
+	// 2. Database
+	// ---------------------------------------------------------
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	runtimeOnly("org.postgresql:postgresql")
 
-	// --- NEW: Mockk & SpringMockk ---
-	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-	testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// ---------------------------------------------------------
+	// 3. Documentation (OpenAPI / Swagger)
+	// ---------------------------------------------------------
+	// Access at: http://localhost:8080/swagger-ui.html
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
-	// Standard Mockk for unit tests
-	testImplementation 'io.mockk:mockk:1.13.16'
+	// ---------------------------------------------------------
+	// 4. Testing (Unit & Integration)
+	// ---------------------------------------------------------
+	// Standard Spring Boot Test Starter (JUnit 5, AssertJ, Hamcrest)
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-	// SpringMockk for Integration Tests (Allows @MockkBean)
-	testImplementation 'com.ninja-squad:springmockk:4.0.2'
+	// Mockk (Better than Mockito for Kotlin)
+	testImplementation("io.mockk:mockk:1.13.9")
+	testImplementation("com.ninja-squad:springmockk:4.0.2") // For @MockkBean in Integration Tests
+
+	// ---------------------------------------------------------
+	// 5. Testcontainers
+	// ---------------------------------------------------------
+	// Automatically spins up a Postgres Docker container during tests
+	testImplementation("org.springframework.boot:spring-boot-testcontainers")
+	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("org.testcontainers:postgresql")
 }
 
 kotlin {
