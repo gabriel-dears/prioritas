@@ -8,7 +8,7 @@ WORKDIR /build
 # 1. Copy the Wrapper scripts and configuration first
 COPY gradlew .
 COPY gradle gradle
-COPY build.gradle settings.gradle ./
+COPY build.gradle.kts settings.gradle.kts ./
 
 # 2. Grant execution permissions to the wrapper
 RUN chmod +x gradlew
