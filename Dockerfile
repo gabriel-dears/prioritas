@@ -2,7 +2,7 @@
 # Stage 1: Builder
 # Use the JDK directly (not the Gradle image) and use the Wrapper
 # -----------------------------------------------------------------------------
-FROM eclipse-temurin:24-jdk AS builder
+FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /build
 
 # 1. Copy the Wrapper scripts and configuration first
@@ -26,7 +26,7 @@ RUN ./gradlew bootJar --no-daemon -x test
 # Stage 2: Extractor
 # (No changes needed here, but included for completeness)
 # -----------------------------------------------------------------------------
-FROM eclipse-temurin:24-jre AS extractor
+FROM eclipse-temurin:17-jre AS extractor
 WORKDIR /build
 COPY --from=builder /build/build/libs/*.jar app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
@@ -35,7 +35,7 @@ RUN java -Djarmode=layertools -jar app.jar extract
 # Stage 3: Runtime
 # (No changes needed here)
 # -----------------------------------------------------------------------------
-FROM eclipse-temurin:24-jre
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 RUN groupadd -r spring && useradd -r -g spring spring

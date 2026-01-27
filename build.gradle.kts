@@ -1,9 +1,9 @@
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "2.2.21"
-	id("org.jetbrains.kotlin.plugin.spring") version "2.2.21"
-	id("org.springframework.boot") version "4.0.2"
-	id("io.spring.dependency-management") version "1.1.7"
-	id("org.jetbrains.kotlin.plugin.jpa") version "2.2.21"
+	id("org.jetbrains.kotlin.jvm") version "1.9.22"
+	id("org.jetbrains.kotlin.plugin.spring") version "1.9.22"
+	id("org.springframework.boot") version "3.2.2"
+	id("io.spring.dependency-management") version "1.1.4"
+	id("org.jetbrains.kotlin.plugin.jpa") version "1.9.22"
 }
 
 group = "br.com.fiap.adj8.phase5"
@@ -12,7 +12,7 @@ description = "prioritas"
 
 java {
 	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(24))
+		languageVersion.set(JavaLanguageVersion.of(17))
 	}
 }
 
@@ -21,45 +21,33 @@ repositories {
 }
 
 dependencies {
-	// ---------------------------------------------------------
-	// 1. Core & Web
-	// ---------------------------------------------------------
+	// Core & Web
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-	// ---------------------------------------------------------
-	// 2. Database
-	// ---------------------------------------------------------
+	// Database
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	runtimeOnly("org.postgresql:postgresql")
 
-	// ---------------------------------------------------------
-	// 3. Documentation (OpenAPI / Swagger)
-	// ---------------------------------------------------------
+	// Documentation
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
-	// ---------------------------------------------------------
-	// 4. Testing (Unit & Integration)
-	// ---------------------------------------------------------
+	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-
-	// Mockk
 	testImplementation("io.mockk:mockk:1.13.9")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
 
-	// ---------------------------------------------------------
-	// 5. Testcontainers
-	// ---------------------------------------------------------
+	// Testcontainers
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
-	testImplementation("org.testcontainers:junit-jupiter:1.19.7")
-	testImplementation("org.testcontainers:postgresql:1.19.7")
+	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("org.testcontainers:postgresql")
 }
 
 kotlin {
 	compilerOptions {
-		freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
+		freeCompilerArgs.addAll("-Xjsr305=strict")
 	}
 }
 
