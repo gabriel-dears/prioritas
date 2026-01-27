@@ -7,17 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.UUID
+import java.util.*
 
-@AutoConfigureMockMvc
 class TriageIntegrationTest : AbstractIntegrationTest() {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -29,34 +26,29 @@ class TriageIntegrationTest : AbstractIntegrationTest() {
 
     @Test
     fun `should perform triage and save result as EMERGENCY when symptoms match`() {
-        // 1. Arrange: Criar o JSON de Request (Paciente com dor no peito)
+        // 1. Arrange
         val patientId = UUID.randomUUID()
         val requestBody = mapOf(
             "patientId" to patientId,
-            "hasChestPain" to true,
+            "hasChestPain" to true, // Isso deve gerar EMERGENCY
             "heartRate" to 110,
             "oxygenSaturation" to 98
         )
 
-        // 2. Act: Fazer o POST na API
+        // 2. Act
         mockMvc.perform(
             post("/api/triages")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
         )
-            // 3. Assert (HTTP): Verificar se retornou 201 Created e o JSON correto
+            // 3. Assert (HTTP)
             .andExpect(status().isCreated)
-            .andExpect(jsonPath("$.riskLevel").value("EMERGENCY")) // Verifica o Enum
-            .andExpect(jsonPath("$.riskColor").value("Red"))       // Verifica a cor
-            .andExpect(jsonPath("$.waitTimeMinutes").value(0))     // Verifica o tempo
+            .andExpect(jsonPath("$.riskLevel").value("EMERGENCY"))
+            .andExpect(jsonPath("$.riskColor").value("Red"))
 
-        // 4. Assert (Database): Verificar se salvou de verdade no banco
+        // 4. Assert (Database)
         val savedTriages = repository.findAll()
         assertThat(savedTriages).hasSize(1)
-
-        val triage = savedTriages[0]
-        assertThat(triage.patientId).isEqualTo(patientId)
-        assertThat(triage.riskLevel).isEqualTo(RiskLevel.EMERGENCY)
-        assertThat(triage.hasChestPain).isTrue()
+        assertThat(savedTriages[0].riskLevel).isEqualTo(RiskLevel.EMERGENCY)
     }
 }

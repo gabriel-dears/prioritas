@@ -1,9 +1,9 @@
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.9.22"
-	id("org.jetbrains.kotlin.plugin.spring") version "1.9.22"
-	id("org.springframework.boot") version "3.2.2"
-	id("io.spring.dependency-management") version "1.1.4"
-	id("org.jetbrains.kotlin.plugin.jpa") version "1.9.22"
+	id("org.jetbrains.kotlin.jvm") version "1.9.24"
+	id("org.jetbrains.kotlin.plugin.spring") version "1.9.24"
+	id("org.springframework.boot") version "3.4.2"
+	id("io.spring.dependency-management") version "1.1.7"
+	id("org.jetbrains.kotlin.plugin.jpa") version "1.9.24"
 }
 
 group = "br.com.fiap.adj8.phase5"
@@ -21,22 +21,16 @@ repositories {
 }
 
 dependencies {
-	// Core & Web
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-
-	// Database
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	runtimeOnly("org.postgresql:postgresql")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
 
-	// Documentation
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
-
-	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("io.mockk:mockk:1.13.9")
+	testImplementation("io.mockk:mockk:1.13.12")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
 
 	// Testcontainers
@@ -59,4 +53,6 @@ allOpen {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	// SOLUÇÃO PARA O ERRO "Client version 1.32 is too old"
+	environment("DOCKER_API_VERSION", "1.44")
 }

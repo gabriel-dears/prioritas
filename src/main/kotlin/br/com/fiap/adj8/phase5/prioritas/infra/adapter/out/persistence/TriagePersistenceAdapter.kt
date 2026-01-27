@@ -25,7 +25,7 @@ class TriagePersistenceAdapter(
         )
 
         // 2. Salva no Banco
-        val savedEntity = repository.save(entity)
+        repository.save(entity)
 
         // 3. Retorna o Domain (neste caso, como o ID não muda, retornamos o próprio objeto de entrada
         // ou poderíamos reconverter se houvesse mudança de estado gerada pelo banco)
