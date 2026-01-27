@@ -1,18 +1,19 @@
 package br.com.fiap.adj8.phase5.prioritas.infra.adapter.`in`.web.dto
 
 import br.com.fiap.adj8.phase5.prioritas.domain.model.VitalSigns
-import java.util.UUID
+import br.com.fiap.adj8.phase5.prioritas.infra.adapter.`in`.web.contract.TriageRequestDocs
+import java.util.*
 
 data class TriageRequest(
-    val patientId: UUID,
-    val temperature: Double?,
-    val heartRate: Int?,
-    val oxygenSaturation: Int?,
-    val hasChestPain: Boolean = false,
-    val systolicPressure: Int?,
-    val diastolicPressure: Int?
-) {
-    // Função auxiliar para converter DTO -> Value Object do Domínio
+    override val patientId: UUID,
+    override val temperature: Double?,
+    override val heartRate: Int?,
+    override val oxygenSaturation: Int?,
+    override val hasChestPain: Boolean = false,
+    override val systolicPressure: Int?,
+    override val diastolicPressure: Int?
+) : TriageRequestDocs {
+
     fun toDomain(): VitalSigns {
         return VitalSigns(
             temperature = temperature,

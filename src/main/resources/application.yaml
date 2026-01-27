@@ -26,5 +26,3 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        # Optimized dialect for Postgres
-        dialect: org.hibernate.dialect.PostgreSQLDialect
