@@ -34,6 +34,11 @@ class PerformTriageService(
                 appliedRuleName = rule::class.simpleName ?: "UnknownRule"
 
                 logger.info("✅ Regra correspondente encontrada: $appliedRuleName")
+
+                if( RiskLevel.EMERGENCY == selectedRisk ) {
+
+                }
+
                 break
             }
         }
