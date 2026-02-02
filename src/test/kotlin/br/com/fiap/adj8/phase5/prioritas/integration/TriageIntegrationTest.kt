@@ -5,6 +5,7 @@ import br.com.fiap.adj8.phase5.prioritas.domain.model.RiskLevel
 import br.com.fiap.adj8.phase5.prioritas.infra.adapter.out.persistence.SpringDataTriageRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -23,6 +24,11 @@ class TriageIntegrationTest : AbstractIntegrationTest() {
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
+
+    @BeforeEach
+    fun setup() {
+        repository.deleteAll()
+    }
 
     @Test
     fun `should perform triage and save result as EMERGENCY when symptoms match`() {
