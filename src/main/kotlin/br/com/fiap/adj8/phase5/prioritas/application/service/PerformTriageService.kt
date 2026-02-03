@@ -2,6 +2,7 @@ package br.com.fiap.adj8.phase5.prioritas.application.service
 
 import br.com.fiap.adj8.phase5.prioritas.application.port.`in`.PerformTriageUseCase
 import br.com.fiap.adj8.phase5.prioritas.application.port.out.SaveTriagePort
+import br.com.fiap.adj8.phase5.prioritas.application.port.out.SendTriageEventPort
 import br.com.fiap.adj8.phase5.prioritas.domain.model.RiskLevel
 import br.com.fiap.adj8.phase5.prioritas.domain.model.Triage
 import br.com.fiap.adj8.phase5.prioritas.domain.model.VitalSigns
@@ -14,7 +15,8 @@ import java.util.UUID
 @Service
 class PerformTriageService(
     private val saveTriagePort: SaveTriagePort,
-    private val triageRules: List<TriageRule>
+    private val triageRules: List<TriageRule>,
+    private val sendTriageEventPort: SendTriageEventPort
 ) : PerformTriageUseCase {
 
     private val logger = LoggerFactory.getLogger(PerformTriageService::class.java)
@@ -22,7 +24,7 @@ class PerformTriageService(
     @Transactional
     override fun execute(patientId: UUID, vitalSigns: VitalSigns): Triage {
         logger.info("🔍 [START] Iniciando análise de triagem para Paciente ID: $patientId")
-        logger.debug("📋 Sinais Vitais: $vitalSigns")
+        logger.debug("\uD83D\uDCCB Sinais Vitais: {}", vitalSigns)
 
         // 1. Padrão Strategy
         var selectedRisk = RiskLevel.STANDARD
@@ -36,7 +38,7 @@ class PerformTriageService(
                 logger.info("✅ Regra correspondente encontrada: $appliedRuleName")
 
                 if( RiskLevel.EMERGENCY == selectedRisk ) {
-
+                    sendTriageEventPort.send(selectedRisk)
                 }
 
                 break
