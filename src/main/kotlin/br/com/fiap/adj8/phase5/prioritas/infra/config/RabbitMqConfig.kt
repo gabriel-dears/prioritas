@@ -1,5 +1,6 @@
 package br.com.fiap.adj8.phase5.prioritas.infra.config
 
+import br.com.fiap.adj8.phase5.prioritas.common.event.TRIAGE_QUEUE
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
 import org.springframework.amqp.support.converter.MessageConverter
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Configuration
 class RabbitMqConfig {
     @Bean
     fun triageQueue(): Queue {
-        return Queue("prioritas.triage.queue", true)
+        return Queue(TRIAGE_QUEUE, true)
     }
 
     @Bean

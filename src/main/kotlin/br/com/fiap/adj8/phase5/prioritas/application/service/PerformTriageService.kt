@@ -3,6 +3,7 @@ package br.com.fiap.adj8.phase5.prioritas.application.service
 import br.com.fiap.adj8.phase5.prioritas.application.port.`in`.PerformTriageUseCase
 import br.com.fiap.adj8.phase5.prioritas.application.port.out.SaveTriagePort
 import br.com.fiap.adj8.phase5.prioritas.application.port.out.SendTriageEventPort
+import br.com.fiap.adj8.phase5.prioritas.application.service.mapper.toTriageNotificationEvent
 import br.com.fiap.adj8.phase5.prioritas.domain.model.RiskLevel
 import br.com.fiap.adj8.phase5.prioritas.domain.model.Triage
 import br.com.fiap.adj8.phase5.prioritas.domain.model.VitalSigns
@@ -24,11 +25,20 @@ class PerformTriageService(
     @Transactional
     override fun execute(patientId: UUID, vitalSigns: VitalSigns): Triage {
         logger.info("🔍 [START] Iniciando análise de triagem para Paciente ID: $patientId")
-        logger.debug("\uD83D\uDCCB Sinais Vitais: {}", vitalSigns)
+        logger.info("Sinais Vitais: {}", vitalSigns)
 
         // 1. Padrão Strategy
         var selectedRisk = RiskLevel.STANDARD
         var appliedRuleName = "DefaultStandardRule"
+
+        val triage = Triage(
+            patientId = patientId,
+            vitalSigns = vitalSigns,
+            riskLevel = selectedRisk
+        )
+
+        // 3. Persistência
+        val savedTriage = saveTriagePort.save(triage)
 
         for (rule in triageRules) {
             if (rule.matches(vitalSigns)) {
@@ -38,7 +48,7 @@ class PerformTriageService(
                 logger.info("✅ Regra correspondente encontrada: $appliedRuleName")
 
                 if( RiskLevel.EMERGENCY == selectedRisk ) {
-                    sendTriageEventPort.send(selectedRisk)
+                    sendTriageEventPort.send(triage.toTriageNotificationEvent(patientId, vitalSigns))
                 }
 
                 break
@@ -46,16 +56,6 @@ class PerformTriageService(
         }
 
         logger.info("📊 Risco Definido: $selectedRisk (Determinado por: $appliedRuleName)")
-
-        // 2. Criação da Entidade
-        val triage = Triage(
-            patientId = patientId,
-            vitalSigns = vitalSigns,
-            riskLevel = selectedRisk
-        )
-
-        // 3. Persistência
-        val savedTriage = saveTriagePort.save(triage)
 
         logger.info("💾 [END] Triagem persistida com sucesso. ID da Triagem: ${savedTriage.id}")
 
