@@ -1,39 +1,41 @@
 # -----------------------------------------------------------------------------
 # Stage 1: Builder
-# Use the JDK directly (not the Gradle image) and use the Wrapper
 # -----------------------------------------------------------------------------
 FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /build
 
-# 1. Copy the Wrapper scripts and configuration first
+# 1. Copia o Wrapper e configurações da RAIZ do projeto
+# O contexto do docker-compose é a raiz (.), então ele vê tudo
 COPY gradlew .
 COPY gradle gradle
 COPY build.gradle.kts settings.gradle.kts ./
 
-# 2. Grant execution permissions to the wrapper
+# 2. Copia o módulo 'common' (Dependência obrigatória)
+COPY common common
+
+# 3. Copia o código do APP (Agora com o nome correto 'prioritas')
+COPY prioritas prioritas
+
+# 4. Dá permissão de execução ao wrapper
 RUN chmod +x gradlew
 
-# 3. Download dependencies (this layer will be cached unless dependencies change)
-RUN ./gradlew dependencies --no-daemon
-
-# 4. Copy the source code
-COPY src ./src
-
-# 5. Build the JAR using the wrapper
-RUN ./gradlew bootJar --no-daemon -x test
+# 5. Executa o build ESPECÍFICO para o projeto ':prioritas'
+# Isso vai compilar o 'common' automaticamente e depois o 'prioritas'
+RUN ./gradlew :prioritas:bootJar --no-daemon -x test
 
 # -----------------------------------------------------------------------------
 # Stage 2: Extractor
-# (No changes needed here, but included for completeness)
 # -----------------------------------------------------------------------------
 FROM eclipse-temurin:17-jre AS extractor
 WORKDIR /build
-COPY --from=builder /build/build/libs/*.jar app.jar
+
+# AJUSTE NO CAMINHO: O jar agora é gerado dentro de prioritas/build/libs
+COPY --from=builder /build/prioritas/build/libs/*.jar app.jar
+
 RUN java -Djarmode=layertools -jar app.jar extract
 
 # -----------------------------------------------------------------------------
 # Stage 3: Runtime
-# (No changes needed here)
 # -----------------------------------------------------------------------------
 FROM eclipse-temurin:17-jre
 WORKDIR /app
