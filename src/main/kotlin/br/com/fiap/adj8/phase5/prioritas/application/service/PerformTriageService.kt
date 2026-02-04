@@ -31,6 +31,16 @@ class PerformTriageService(
         var selectedRisk = RiskLevel.STANDARD
         var appliedRuleName = "DefaultStandardRule"
 
+        for (rule in triageRules) {
+            if (rule.matches(vitalSigns)) {
+                selectedRisk = rule.getRiskLevel()
+                appliedRuleName = rule::class.simpleName ?: "UnknownRule"
+
+                logger.info("✅ Regra correspondente encontrada: $appliedRuleName")
+                break
+            }
+        }
+
         val triage = Triage(
             patientId = patientId,
             vitalSigns = vitalSigns,
@@ -40,22 +50,12 @@ class PerformTriageService(
         // 3. Persistência
         val savedTriage = saveTriagePort.save(triage)
 
-        for (rule in triageRules) {
-            if (rule.matches(vitalSigns)) {
-                selectedRisk = rule.getRiskLevel()
-                appliedRuleName = rule::class.simpleName ?: "UnknownRule"
-
-                logger.info("✅ Regra correspondente encontrada: $appliedRuleName")
-
-                if( RiskLevel.EMERGENCY == selectedRisk ) {
-                    sendTriageEventPort.send(triage.toTriageNotificationEvent(patientId, vitalSigns))
-                }
-
-                break
-            }
-        }
-
         logger.info("📊 Risco Definido: $selectedRisk (Determinado por: $appliedRuleName)")
+
+        if( RiskLevel.EMERGENCY == selectedRisk ) {
+            logger.info("Enviando notificação async...")
+            sendTriageEventPort.send(triage.toTriageNotificationEvent(patientId, vitalSigns))
+        }
 
         logger.info("💾 [END] Triagem persistida com sucesso. ID da Triagem: ${savedTriage.id}")
 
