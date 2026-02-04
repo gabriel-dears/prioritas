@@ -14,13 +14,11 @@ class TriageEntity(
     @Column(nullable = false)
     val patientId: UUID,
 
-    // Mapeando RiskLevel como String para ficar legível no banco ("RED", "BLUE")
     @Enumerated(EnumType.STRING)
     val riskLevel: RiskLevel,
 
     val assessedAt: LocalDateTime,
 
-    // --- Dados Vitais achatados (Flattened) ---
     val temperature: Double?,
     val heartRate: Int?,
     val oxygenSaturation: Int?,
@@ -28,7 +26,6 @@ class TriageEntity(
     val systolicPressure: Int?,
     val diastolicPressure: Int?
 ) {
-    // JPA exige um construtor vazio
     constructor() : this(
         UUID.randomUUID(),
         UUID.randomUUID(),

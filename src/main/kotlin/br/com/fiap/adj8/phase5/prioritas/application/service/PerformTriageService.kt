@@ -27,7 +27,6 @@ class PerformTriageService(
         logger.info("🔍 [START] Iniciando análise de triagem para Paciente ID: $patientId")
         logger.info("Sinais Vitais: {}", vitalSigns)
 
-        // 1. Padrão Strategy
         var selectedRisk = RiskLevel.STANDARD
         var appliedRuleName = "DefaultStandardRule"
 
@@ -47,7 +46,6 @@ class PerformTriageService(
             riskLevel = selectedRisk
         )
 
-        // 3. Persistência
         val savedTriage = saveTriagePort.save(triage)
 
         logger.info("📊 Risco Definido: $selectedRisk (Determinado por: $appliedRuleName)")

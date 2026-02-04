@@ -8,12 +8,11 @@ import java.util.UUID
 data class TriageResponse(
     val triageId: UUID,
     val patientId: UUID,
-    val riskLevel: RiskLevel, // Retornar o Enum completo é bom, o JSON mostra o nome
+    val riskLevel: RiskLevel,
     val riskColor: String,
     val waitTimeMinutes: Int,
     val assessedAt: LocalDateTime
 ) {
-    // Construtor secundário para criar a partir do Domínio
     companion object {
         fun fromDomain(triage: Triage): TriageResponse {
             return TriageResponse(

@@ -16,13 +16,10 @@ class TriageBeanConfiguration {
         saveTriagePort: SaveTriagePort,
         sendTriageEventPort: SendTriageEventPort
     ): PerformTriageService {
-        // AQUI ESTÁ O SEGREDO DA PRIORIDADE!
-        // A ordem desta lista define qual regra é testada primeiro.
-        // Deve ser sempre do MAIS GRAVE para o MENOS GRAVE.
         val rules = listOf(
-            EmergencyRule(),   // 1. Verifica se é Emergência (Vermelho)
-            VeryUrgentRule(),  // 2. Se não, verifica Muito Urgente (Laranja)
-            UrgentRule()       // 3. Se não, verifica Urgente (Amarelo)
+            EmergencyRule(),
+            VeryUrgentRule(),
+            UrgentRule()
         )
 
         return PerformTriageService(saveTriagePort, rules, sendTriageEventPort)

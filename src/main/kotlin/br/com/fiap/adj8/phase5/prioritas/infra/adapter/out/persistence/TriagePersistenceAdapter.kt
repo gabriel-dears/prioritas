@@ -10,7 +10,6 @@ class TriagePersistenceAdapter(
 ) : SaveTriagePort {
 
     override fun save(triage: Triage): Triage {
-        // 1. Converte Domain -> JPA Entity
         val entity = TriageEntity(
             id = triage.id,
             patientId = triage.patientId,
@@ -23,12 +22,7 @@ class TriagePersistenceAdapter(
             systolicPressure = triage.vitalSigns.systolicPressure,
             diastolicPressure = triage.vitalSigns.diastolicPressure
         )
-
-        // 2. Salva no Banco
         repository.save(entity)
-
-        // 3. Retorna o Domain (neste caso, como o ID não muda, retornamos o próprio objeto de entrada
-        // ou poderíamos reconverter se houvesse mudança de estado gerada pelo banco)
         return triage
     }
 }

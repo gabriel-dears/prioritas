@@ -9,7 +9,6 @@ data class VitalSigns(
     val diastolicPressure: Int? = null
 ) {
     init {
-        // Domain Safety: Fail fast if data is physically impossible
         temperature?.let {
             require(it in 25.0..46.0) { "Temperature must be between 25.0 and 46.0" }
         }

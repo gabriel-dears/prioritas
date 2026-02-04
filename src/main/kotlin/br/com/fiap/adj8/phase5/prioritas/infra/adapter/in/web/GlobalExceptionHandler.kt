@@ -19,10 +19,9 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     }
 
     @ExceptionHandler(Exception::class)
-    fun handleGeneral(ex: Exception): ProblemDetail {
+    fun handleGeneral(): ProblemDetail {
         val problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Ocorreu um erro inesperado.")
         problem.title = "Erro Interno"
-        // Em produção, não devolvemos a mensagem da exception crua por segurança
         return problem
     }
 }

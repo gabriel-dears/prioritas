@@ -35,11 +35,6 @@ class VeryUrgentRuleTest {
 
     @Test
     fun `should NOT match when condition is actually EMERGENCY (logic handled by order, but rule itself checks ranges)`() {
-        // Ideally, this rule matches ranges.
-        // If Oxygen is 89, it technically matches "below 94" logic?
-        // Let's check your VeryUrgentRule implementation.
-        // If implemented as `oxygen < 94`, it returns true for 89 too.
-        // This is fine because the SERVICE stops at the first Red match.
         val vitals = VitalSigns(oxygenSaturation = 89)
         assertTrue(rule.matches(vitals))
     }

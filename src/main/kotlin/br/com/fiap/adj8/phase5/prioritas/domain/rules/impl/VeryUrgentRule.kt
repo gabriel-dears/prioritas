@@ -9,10 +9,7 @@ class VeryUrgentRule : TriageRule {
     override fun matches(vitalSigns: VitalSigns): Boolean {
         val highFever = vitalSigns.temperature != null && vitalSigns.temperature >= 39.0
         val moderateHypoxia = vitalSigns.oxygenSaturation != null && vitalSigns.oxygenSaturation < 94
-
-        // Note o uso de ranges no Kotlin para ficar legível
         val highHeartRate = vitalSigns.heartRate != null && vitalSigns.heartRate in 121..140
-
         return highFever || moderateHypoxia || highHeartRate
     }
 

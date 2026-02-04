@@ -36,7 +36,6 @@ dependencies {
 	testImplementation("io.mockk:mockk:1.13.12")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
 
-	// Testcontainers
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:postgresql")
@@ -56,6 +55,5 @@ allOpen {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-	// SOLUÇÃO PARA O ERRO "Client version 1.32 is too old"
 	environment("DOCKER_API_VERSION", "1.44")
 }
