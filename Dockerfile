@@ -16,6 +16,8 @@ COPY common common
 # 3. Copia o código do APP (Agora com o nome correto 'prioritas')
 COPY prioritas prioritas
 
+RUN mkdir notification-app
+
 # 4. Dá permissão de execução ao wrapper
 RUN chmod +x gradlew
 
