@@ -34,6 +34,7 @@ dependencies {
 	implementation(project(":common"))
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("io.mockk:mockk:1.13.12")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
 
