@@ -30,6 +30,7 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation(project(":common"))
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
