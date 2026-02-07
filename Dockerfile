@@ -31,7 +31,6 @@ RUN ./gradlew :prioritas:bootJar --no-daemon -x test
 FROM eclipse-temurin:17-jre AS extractor
 WORKDIR /build
 
-# AJUSTE NO CAMINHO: O jar agora é gerado dentro de prioritas/build/libs
 COPY --from=builder /build/prioritas/build/libs/*.jar app.jar
 
 RUN java -Djarmode=layertools -jar app.jar extract
