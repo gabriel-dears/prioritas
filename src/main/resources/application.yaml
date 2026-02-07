@@ -3,25 +3,14 @@ spring:
     name: prioritas
 
   datasource:
-    # -------------------------------------------------------------------------
-    # Database Connection
-    # Pattern: ${ENV_VAR_NAME:default_value}
-    # -------------------------------------------------------------------------
-    # If running in Docker (where SPRING_DATASOURCE_URL is set), it uses that.
-    # If running locally, it defaults to localhost:5432.
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/prioritas}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
-
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER}
   jpa:
-    # -------------------------------------------------------------------------
-    # JPA / Hibernate Settings
-    # -------------------------------------------------------------------------
-    open-in-view: false # Best practice: disable to prevent N+1 issues in views
+    open-in-view: false
     show-sql: true
     hibernate:
-      # 'update' is good for dev; use 'validate' or 'none' (with migrations) for prod
       ddl-auto: update
     properties:
       hibernate:
